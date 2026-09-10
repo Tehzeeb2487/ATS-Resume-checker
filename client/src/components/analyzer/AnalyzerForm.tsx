@@ -34,38 +34,49 @@ export function AnalyzerForm({
 
   return (
     <section className="analyzer-form" aria-labelledby="analyzer-heading">
-      <h2 id="analyzer-heading" className="analyzer-form__heading">
-        Start your analysis
+      <h2 id="analyzer-heading" className="sr-only">
+        Resume &amp; Job Description Analyzer
       </h2>
-      <p className="analyzer-form__subheading">
-        Upload your resume and paste the target job description below.
-      </p>
 
       {analysisError && (
         <ErrorAlert message={analysisError} onDismiss={onDismissError} />
       )}
 
       <div className="analyzer-form__grid">
-        <ResumeUploader
-          file={resume}
-          onFileChange={onResumeChange}
-          error={resumeError}
-        />
-        <JobDescriptionInput
-          value={jobDescription}
-          onChange={onJobDescriptionChange}
-          error={jobError}
-        />
+        <div className="analyzer-form__col">
+          <div className="analyzer-form__step-label">
+            <span className="step-num">1</span>
+            <span>Upload Resume</span>
+          </div>
+          <ResumeUploader
+            file={resume}
+            onFileChange={onResumeChange}
+            error={resumeError}
+          />
+        </div>
+
+        <div className="analyzer-form__col">
+          <div className="analyzer-form__step-label">
+            <span className="step-num">2</span>
+            <span>Paste Job Description</span>
+          </div>
+          <JobDescriptionInput
+            value={jobDescription}
+            onChange={onJobDescriptionChange}
+            error={jobError}
+          />
+        </div>
       </div>
 
       <div className="analyzer-form__actions">
-        <AnalyzeButton disabled={!canAnalyze} onClick={onAnalyze} />
         {!canAnalyze && (
           <p className="analyzer-form__hint">
-            Upload a resume and paste a job description to enable analysis.
+            Upload your resume and paste a job description (min 50 characters) to analyze.
           </p>
         )}
+        <AnalyzeButton disabled={!canAnalyze} onClick={onAnalyze} />
       </div>
     </section>
   )
 }
+

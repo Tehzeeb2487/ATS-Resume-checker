@@ -1,22 +1,28 @@
 import type { ResumeQualityCheck } from '../../types/analysis'
-import { CheckIcon, WarningIcon, XIcon } from '../ui/Icons'
+import { CheckIcon, DocumentIcon, WarningIcon, XIcon } from '../ui/Icons'
 
 interface ResumeQualityChecksProps {
   checks: ResumeQualityCheck[]
 }
 
 function StatusIcon({ status }: { status: ResumeQualityCheck['status'] }) {
-  if (status === 'pass') return <CheckIcon size={16} />
-  if (status === 'warning') return <WarningIcon size={16} />
-  return <XIcon size={16} />
+  if (status === 'pass') return <CheckIcon size={14} />
+  if (status === 'warning') return <WarningIcon size={14} />
+  return <XIcon size={14} />
 }
 
 export function ResumeQualityChecks({ checks }: ResumeQualityChecksProps) {
   return (
     <section className="card-section" aria-labelledby="quality-heading">
-      <h3 id="quality-heading" className="card-section__title">
-        Resume Quality Checks
-      </h3>
+      <div className="card-section__header">
+        <span className="card-section__icon-badge card-section__icon-badge--blue">
+          <DocumentIcon size={16} />
+        </span>
+        <h3 id="quality-heading" className="card-section__title">
+          Resume Quality Check
+        </h3>
+      </div>
+
       <ul className="quality-list">
         {checks.map((check) => (
           <li
@@ -26,13 +32,11 @@ export function ResumeQualityChecks({ checks }: ResumeQualityChecksProps) {
             <span className="quality-item__icon" aria-hidden="true">
               <StatusIcon status={check.status} />
             </span>
-            <div>
-              <p className="quality-item__label">{check.label}</p>
-              {check.detail && <p className="quality-item__detail">{check.detail}</p>}
-            </div>
+            <span className="quality-item__label">{check.label}</span>
           </li>
         ))}
       </ul>
     </section>
   )
 }
+

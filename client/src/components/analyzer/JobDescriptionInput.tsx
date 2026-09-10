@@ -1,5 +1,5 @@
 import { useId } from 'react'
-import { MAX_JOB_DESCRIPTION_LENGTH, MIN_JOB_DESCRIPTION_LENGTH } from '../../constants/validation'
+import { MAX_JOB_DESCRIPTION_LENGTH } from '../../constants/validation'
 
 interface JobDescriptionInputProps {
   value: string
@@ -14,36 +14,27 @@ export function JobDescriptionInput({ value, onChange, error }: JobDescriptionIn
 
   return (
     <div className="form-field">
-      <div className="form-field__label-row">
-        <label htmlFor={textareaId} className="form-field__label">
-          Job description
-          <span className="form-field__required" aria-hidden="true">
-            *
+      <div className="textarea-wrapper">
+        <textarea
+          id={textareaId}
+          className={`textarea ${error ? 'textarea--error' : ''}`}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="Paste the job description here..."
+          rows={8}
+          maxLength={MAX_JOB_DESCRIPTION_LENGTH}
+          aria-describedby={`${textareaId}-hint${error ? ` ${textareaId}-error` : ''}`}
+          aria-invalid={Boolean(error)}
+        />
+        <div className="textarea-footer">
+          <span
+            className={`form-field__count ${isNearLimit ? 'form-field__count--warn' : ''}`}
+            aria-live="polite"
+          >
+            {charCount} / {MAX_JOB_DESCRIPTION_LENGTH}
           </span>
-        </label>
-        <span
-          className={`form-field__count ${isNearLimit ? 'form-field__count--warn' : ''}`}
-          aria-live="polite"
-        >
-          {charCount.toLocaleString()} / {MAX_JOB_DESCRIPTION_LENGTH.toLocaleString()}
-        </span>
+        </div>
       </div>
-
-      <textarea
-        id={textareaId}
-        className={`textarea ${error ? 'textarea--error' : ''}`}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder="Paste the full job description here — include responsibilities, required skills, and qualifications for the most accurate analysis."
-        rows={10}
-        maxLength={MAX_JOB_DESCRIPTION_LENGTH}
-        aria-describedby={`${textareaId}-hint${error ? ` ${textareaId}-error` : ''}`}
-        aria-invalid={Boolean(error)}
-      />
-
-      <p id={`${textareaId}-hint`} className="form-field__hint">
-        Minimum {MIN_JOB_DESCRIPTION_LENGTH} characters required
-      </p>
 
       {error && (
         <p id={`${textareaId}-error`} className="form-field__error" role="alert">
@@ -53,3 +44,4 @@ export function JobDescriptionInput({ value, onChange, error }: JobDescriptionIn
     </div>
   )
 }
+

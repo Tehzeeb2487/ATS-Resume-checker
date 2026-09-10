@@ -52,15 +52,10 @@ export function ResumeUploader({ file, onFileChange, error }: ResumeUploaderProp
 
   return (
     <div className="form-field">
-      <label htmlFor={inputId} className="form-field__label">
-        Resume
-        <span className="form-field__required" aria-hidden="true">
-          *
-        </span>
-      </label>
-
       <div
-        className={`upload-zone ${file ? 'upload-zone--selected' : ''} ${isDragging ? 'upload-zone--dragging' : ''} ${displayError ? 'upload-zone--error' : ''}`}
+        className={`upload-zone ${file ? 'upload-zone--selected' : ''} ${
+          isDragging ? 'upload-zone--dragging' : ''
+        } ${displayError ? 'upload-zone--error' : ''}`}
         onDragOver={(e) => {
           e.preventDefault()
           setIsDragging(true)
@@ -82,7 +77,7 @@ export function ResumeUploader({ file, onFileChange, error }: ResumeUploaderProp
         {file ? (
           <div className="upload-zone__file">
             <div className="upload-zone__file-icon" aria-hidden="true">
-              <FileIcon size={24} />
+              <FileIcon size={26} />
             </div>
             <div className="upload-zone__file-info">
               <p className="upload-zone__filename">{file.name}</p>
@@ -96,27 +91,29 @@ export function ResumeUploader({ file, onFileChange, error }: ResumeUploaderProp
                 setLocalError(null)
               }}
               aria-label={`Remove ${file.name}`}
+              title="Remove file"
             >
               <XIcon size={16} />
             </button>
           </div>
         ) : (
           <div className="upload-zone__empty">
-            <div className="upload-zone__icon" aria-hidden="true">
-              <UploadIcon size={28} />
+            <div className="upload-zone__icon-wrapper" aria-hidden="true">
+              <UploadIcon size={24} />
             </div>
             <p className="upload-zone__text">
-              Drag and drop your resume here, or{' '}
-              <button
-                type="button"
-                className="upload-zone__browse"
-                onClick={() => inputRef.current?.click()}
-              >
-                browse file
-              </button>
+              Drag &amp; drop your resume here
             </p>
+            <p className="upload-zone__or">or</p>
+            <button
+              type="button"
+              className="upload-zone__browse-btn"
+              onClick={() => inputRef.current?.click()}
+            >
+              Browse File
+            </button>
             <p id={`${inputId}-hint`} className="upload-zone__hint">
-              Supported formats: PDF, DOCX · Max 5 MB
+              Supported: PDF, DOCX (Max 5MB)
             </p>
           </div>
         )}
@@ -130,3 +127,4 @@ export function ResumeUploader({ file, onFileChange, error }: ResumeUploaderProp
     </div>
   )
 }
+

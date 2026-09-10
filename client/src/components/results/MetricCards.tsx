@@ -16,8 +16,10 @@ export function MetricCards({ metrics }: MetricCardsProps) {
     <div className="metric-cards">
       {METRIC_CONFIG.map(({ key, label }) => (
         <div key={key} className="metric-card">
-          <p className="metric-card__label">{label}</p>
-          <p className="metric-card__value">{metrics[key]}%</p>
+          <div className="metric-card__header">
+            <span className="metric-card__label">{label}</span>
+            <span className="metric-card__value">{metrics[key]}%</span>
+          </div>
           <div className="metric-card__bar" aria-hidden="true">
             <div
               className="metric-card__bar-fill"
@@ -29,3 +31,4 @@ export function MetricCards({ metrics }: MetricCardsProps) {
     </div>
   )
 }
+

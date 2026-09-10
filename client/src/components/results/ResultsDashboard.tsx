@@ -1,10 +1,11 @@
 import type { AnalysisResult } from '../../types/analysis'
+import { Button } from '../ui/Button'
+import { RefreshIcon, SparklesIcon } from '../ui/Icons'
 import { ImprovementSuggestions } from './ImprovementSuggestions'
 import { JobDescriptionMatching } from './JobDescriptionMatching'
 import { MatchedKeywords } from './MatchedKeywords'
 import { MetricCards } from './MetricCards'
 import { MissingKeywords } from './MissingKeywords'
-import { ResultsActions } from './ResultsActions'
 import { ResumeQualityChecks } from './ResumeQualityChecks'
 import { ScoreCard } from './ScoreCard'
 
@@ -26,45 +27,61 @@ export function ResultsDashboard({
 
   return (
     <section className="results-dashboard" aria-labelledby="results-heading">
-      <div className="results-dashboard__header">
+      <div className="results-dashboard__top-bar">
         <div>
           <h2 id="results-heading" className="results-dashboard__title">
             Analysis Results
           </h2>
-          <p className="results-dashboard__meta">Completed {analyzedDate}</p>
+          <p className="results-dashboard__sub">
+            Here&apos;s how your resume matches with the job description. • Completed {analyzedDate}
+          </p>
         </div>
-        {result.isDemo && (
-          <div className="demo-banner" role="status">
-            <strong>UI Preview</strong>
-            <span>
-              Sample results for demonstration. Connect the backend API for real
-              analysis of your resume.
-            </span>
-          </div>
-        )}
+
+        <div className="results-dashboard__top-actions">
+          <Button variant="secondary" size="md" onClick={onAnalyzeAnother}>
+            <RefreshIcon size={16} />
+            <span>Analyze Another Resume</span>
+          </Button>
+          <Button variant="primary" size="md" onClick={onStartNew}>
+            <SparklesIcon size={16} />
+            <span>New Analysis</span>
+          </Button>
+        </div>
       </div>
 
-      <div className="results-dashboard__score">
+      {result.isDemo && (
+        <div className="demo-banner" role="status">
+          <strong>UI Preview:</strong> Sample results for demonstration. Connect the backend API for real analysis of your resume.
+        </div>
+      )}
+
+      {/* Main Score Hero Card */}
+      <div className="results-dashboard__score-wrap">
         <ScoreCard result={result} />
       </div>
 
-      <MetricCards metrics={result.metrics} />
+      {/* 4 Metric Cards */}
+      <div className="results-dashboard__metrics-wrap">
+        <MetricCards metrics={result.metrics} />
+      </div>
 
-      <div className="results-dashboard__keywords">
+      {/* Keywords Grid (Matched Skills + Missing/Weak Keywords) */}
+      <div className="results-dashboard__keywords-grid">
         <MatchedKeywords keywords={result.matchedKeywords} />
         <MissingKeywords keywords={result.missingKeywords} />
       </div>
 
-      <ImprovementSuggestions suggestions={result.suggestions} />
-
-      <JobDescriptionMatching categories={result.jobDescriptionMatching} />
-
-      <ResumeQualityChecks checks={result.qualityChecks} />
-
-      <ResultsActions
-        onAnalyzeAnother={onAnalyzeAnother}
-        onStartNew={onStartNew}
-      />
+      {/* Breakdown Grid: Suggestions + JD Match + Quality Checks */}
+      <div className="results-dashboard__details-grid">
+        <div className="results-dashboard__col-main">
+          <ImprovementSuggestions suggestions={result.suggestions} />
+        </div>
+        <div className="results-dashboard__col-side">
+          <JobDescriptionMatching categories={result.jobDescriptionMatching} />
+          <ResumeQualityChecks checks={result.qualityChecks} />
+        </div>
+      </div>
     </section>
   )
 }
+
