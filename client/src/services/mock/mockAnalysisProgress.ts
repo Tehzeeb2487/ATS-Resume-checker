@@ -1,7 +1,7 @@
 import { ANALYSIS_STAGE_DEFINITIONS } from '../../constants/analysisStages'
 import type { AnalysisProgress, AnalysisStage, ProgressCallback } from '../../types/analysis'
 
-const STAGE_DURATIONS_MS = [800, 900, 1000, 1100, 900, 1000, 700]
+const STAGE_DURATIONS_MS = [800, 1000, 1200, 800]
 
 function buildProgress(completedCount: number, activeIndex: number, percent: number): AnalysisProgress {
   const stages: AnalysisStage[] = ANALYSIS_STAGE_DEFINITIONS.map((stage, index) => {
@@ -44,8 +44,7 @@ function delay(ms: number, signal?: AbortSignal): Promise<void> {
 }
 
 /**
- * Simulates analysis progress for UI demonstration.
- * The real backend should drive progress via polling or streaming.
+ * Simulates analysis progress for UI demonstration when backend stream is absent.
  */
 export async function runMockAnalysisProgress(
   onProgress: ProgressCallback,
@@ -56,7 +55,7 @@ export async function runMockAnalysisProgress(
 
   for (let i = 0; i < ANALYSIS_STAGE_DEFINITIONS.length; i++) {
     const stageDuration = STAGE_DURATIONS_MS[i]
-    const steps = 4
+    const steps = 3
     const stepDuration = stageDuration / steps
 
     for (let step = 0; step < steps; step++) {
@@ -75,3 +74,4 @@ export async function runMockAnalysisProgress(
     currentMessage: 'Analysis complete',
   })
 }
+

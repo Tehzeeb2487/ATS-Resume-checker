@@ -5,10 +5,12 @@ interface ImprovementSuggestionsProps {
   suggestions: ImprovementSuggestion[]
 }
 
-const PRIORITY_LABELS: Record<ImprovementSuggestion['priority'], string> = {
-  high: 'High Priority',
-  medium: 'Medium Priority',
-  low: 'Low Priority',
+function getPriorityLabel(priority?: string): string {
+  if (!priority) return 'Medium Priority'
+  const lower = priority.toLowerCase()
+  if (lower === 'high') return 'High Priority'
+  if (lower === 'low') return 'Low Priority'
+  return 'Medium Priority'
 }
 
 export function ImprovementSuggestions({ suggestions }: ImprovementSuggestionsProps) {
@@ -23,27 +25,34 @@ export function ImprovementSuggestions({ suggestions }: ImprovementSuggestionsPr
         </h3>
       </div>
 
-      <ul className="suggestion-list">
-        {suggestions.map((suggestion, index) => (
-          <li key={suggestion.id} className="suggestion-item">
-            <div className="suggestion-item__header">
-              <span className="suggestion-item__number" aria-hidden="true">
-                {index + 1}
-              </span>
-              <div className="suggestion-item__meta">
-                <h4 className="suggestion-item__title">{suggestion.title}</h4>
-                <span
-                  className={`suggestion-item__priority suggestion-item__priority--${suggestion.priority}`}
-                >
-                  {PRIORITY_LABELS[suggestion.priority]}
+      {!suggestions || suggestions.length === 0 ? (
+        <p className="card-section__empty">No suggestions generated.</p>
+      ) : (
+        <ul className="suggestion-list">
+          {suggestions.map((suggestion, index) => (
+            <li key={suggestion.id || index} className="suggestion-item">
+              <div className="suggestion-item__header">
+                <span className="suggestion-item__number" aria-hidden="true">
+                  {index + 1}
                 </span>
+                <div className="suggestion-item__meta">
+                  <h4 className="suggestion-item__title">{suggestion.title}</h4>
+                  <span
+                    className={`suggestion-item__priority suggestion-item__priority--${(
+                      suggestion.priority || 'medium'
+                    ).toLowerCase()}`}
+                  >
+                    {getPriorityLabel(suggestion.priority)}
+                  </span>
+                </div>
               </div>
-            </div>
-            <p className="suggestion-item__description">{suggestion.description}</p>
-          </li>
-        ))}
-      </ul>
+              <p className="suggestion-item__description">{suggestion.description}</p>
+            </li>
+          ))}
+        </ul>
+      )}
     </section>
   )
 }
+
 

@@ -1,10 +1,7 @@
 export type AnalysisStageId =
   | 'reading_resume'
   | 'extracting_info'
-  | 'comparing_jd'
   | 'matching_keywords'
-  | 'identifying_missing'
-  | 'generating_recommendations'
   | 'finalizing'
 
 export type AnalysisStageStatus = 'pending' | 'active' | 'complete'
@@ -39,7 +36,7 @@ export interface ImprovementSuggestion {
   id: string
   title: string
   description: string
-  priority: 'high' | 'medium' | 'low'
+  priority: 'High' | 'Medium' | 'Low' | 'high' | 'medium' | 'low'
 }
 
 export interface ResumeQualityCheck {
@@ -59,7 +56,7 @@ export interface AnalysisResult {
   jobDescriptionMatching: JobDescriptionCategory[]
   qualityChecks: ResumeQualityCheck[]
   analyzedAt: string
-  isDemo: boolean
+  isDemo?: boolean
 }
 
 export type AppView = 'analyzer' | 'analyzing' | 'results'
@@ -69,9 +66,20 @@ export interface AnalyzeResumeRequest {
   jobDescription: string
 }
 
-export interface AnalyzeResumeError {
-  code: 'NETWORK' | 'SERVER' | 'TIMEOUT' | 'UNKNOWN'
-  message: string
+export interface RawBackendResponse {
+  atsScore?: number
+  score?: number
+  interpretation?: string
+  metrics?: Partial<AnalysisMetrics>
+  matchedSkills?: string[]
+  matchedKeywords?: string[]
+  missingKeywords?: string[]
+  suggestions?: ImprovementSuggestion[]
+  jobDescriptionMatching?: JobDescriptionCategory[]
+  categoryScores?: Record<string, number>
+  qualityChecks?: ResumeQualityCheck[]
+  analyzedAt?: string
 }
 
 export type ProgressCallback = (progress: AnalysisProgress) => void
+

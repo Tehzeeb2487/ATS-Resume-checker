@@ -2,12 +2,9 @@ import type { AnalysisStage } from '../types/analysis'
 
 export const ANALYSIS_STAGE_DEFINITIONS: Omit<AnalysisStage, 'status'>[] = [
   { id: 'reading_resume', label: 'Reading resume' },
-  { id: 'extracting_info', label: 'Extracting resume information' },
-  { id: 'comparing_jd', label: 'Comparing with job description' },
-  { id: 'matching_keywords', label: 'Matching keywords and skills' },
-  { id: 'identifying_missing', label: 'Identifying missing keywords' },
-  { id: 'generating_recommendations', label: 'Generating recommendations' },
-  { id: 'finalizing', label: 'Finalizing analysis' },
+  { id: 'extracting_info', label: 'Extracting job requirements' },
+  { id: 'matching_keywords', label: 'Comparing skills & keywords' },
+  { id: 'finalizing', label: 'Calculating ATS score' },
 ]
 
 export function createInitialStages(): AnalysisStage[] {
@@ -16,3 +13,4 @@ export function createInitialStages(): AnalysisStage[] {
     status: index === 0 ? 'active' : 'pending',
   }))
 }
+
