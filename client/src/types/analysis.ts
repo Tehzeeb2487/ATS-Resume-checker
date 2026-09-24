@@ -67,18 +67,63 @@ export interface AnalyzeResumeRequest {
 }
 
 export interface RawBackendResponse {
+  analysisId?: string
+  resumeFileName?: string
   atsScore?: number
-  score?: number
-  interpretation?: string
-  metrics?: Partial<AnalysisMetrics>
+
   matchedSkills?: string[]
   matchedKeywords?: string[]
   missingKeywords?: string[]
-  suggestions?: ImprovementSuggestion[]
-  jobDescriptionMatching?: JobDescriptionCategory[]
-  categoryScores?: Record<string, number>
-  qualityChecks?: ResumeQualityCheck[]
+
+  jobMatch?: {
+    skills?: number
+    keywords?: number
+    experience?: number
+    projects?: number
+    education?: number
+  }
+
+  score?: number
+
+  interpretation?: string
+
+  suggestions?: Array<{
+    id?: string
+    title?: string
+    priority?:
+    | 'high'
+    | 'medium'
+    | 'low'
+    | 'High'
+    | 'Medium'
+    | 'Low'
+    description?: string
+  }>
+
+  qualityChecks?: Array<{
+    id: string
+    label: string
+    status: 'pass' | 'warning' | 'fail'
+    detail?: string
+  }>
+
   analyzedAt?: string
+
+  metrics?: {
+    overallMatch?: number
+    keywordMatch?: number
+    skillsMatch?: number
+    experienceRelevance?: number
+  }
+
+  categoryScores?: {
+    Overall?: number
+    Keywords?: number
+    Skills?: number
+    Experience?: number
+    Projects?: number
+    Education?: number
+  }
 }
 
 export type ProgressCallback = (progress: AnalysisProgress) => void

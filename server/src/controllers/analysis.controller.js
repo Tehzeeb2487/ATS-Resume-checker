@@ -7,6 +7,8 @@ const {
     analyzeResumeWithAI
 } = require("../services/ai.service");
 
+const Analysis = require("../models/analysis.model");
+
 const analysisresume = async (req, res) => {
     let uploadFilePath = null;
 
@@ -31,6 +33,14 @@ const analysisresume = async (req, res) => {
 
         const resumeText = await extractTextFromPDF(uploadFilePath);
 
+        if (!resumeText) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Could not extract text from this PDF. Please upload a text-based PDF.",
+            });
+        }
+
         const aiResult = await analyzeResumeWithAI(
             resumeText,
             jobDescription
@@ -44,22 +54,35 @@ const analysisresume = async (req, res) => {
             aiResult.educationMatch * 0.10
         );
 
-        if (!resumeText) {
-            return res.status(400).json({
-                success: false,
-                message:
-                    "Could not extract text from this PDF. Please upload a text-based PDF.",
-            });
-        }
+        const analysis = new Analysis({
+            resumeFileName: req.file.originalname,
+            jobDescription,
+            atsScore,
+            matchedSkills: aiResult.matchedSkills,
+            missingKeywords: aiResult.missingKeywords,
+            jobMatch: {
+                skills: aiResult.skillsMatch,
+                keywords: aiResult.keywordsMatch,
+                experience: aiResult.experienceMatch,
+                projects: aiResult.projectsMatch,
+                education: aiResult.educationMatch,
+            },
+            suggestions: aiResult.suggestions,
+        });
 
+        await analysis.save();
+
+        console.log("MongoDB Analysis Saved:");
+        console.log(analysis._id);
         console.log("=========== RESUME TEXT ===========");
         console.log(resumeText);
         console.log("===================================");
 
         return res.status(200).json({
             success: true,
-            message: "Resume uploaded and text extracted successfully.",
+            message: "Resume analyzed successfully.",
             data: {
+                analysisId: analysis._id,
                 resumeFileName: req.file.originalname,
                 atsScore,
                 matchedSkills: aiResult.matchedSkills,
