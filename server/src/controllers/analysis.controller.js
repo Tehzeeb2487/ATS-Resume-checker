@@ -102,6 +102,22 @@ const analysisresume = async (req, res) => {
     } catch (error) {
         console.error("Analysis Resume Error:", error);
 
+        if (error?.status === 503) {
+            return res.status(503).json({
+                success: false,
+                message:
+                    "AI service is temporarily busy. Please try again in a moment.",
+            });
+        }
+
+        if (error?.status === 429) {
+            return res.status(429).json({
+                success: false,
+                message:
+                    "AI service is temporarily busy. Please try again shortly.",
+            })
+        }
+
         return res.status(500).json({
             success: false,
             message: "Something went wrong while processing the resume.",

@@ -5,6 +5,41 @@ const genAI = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY,
 });
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const generateWithRetry = async (request, maxRetries = 3) => {
+    let lastError;
+
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+            return await genAI.models.generateContent(request);
+        } catch (error) {
+            lastError = error;
+
+            const status = error?.status;
+
+            const shouldRetry =
+                status === 429 ||
+                status === 500 ||
+                status === 503;
+
+            if (!shouldRetry || attempt === maxRetries) {
+                throw error;
+            }
+
+            const delay = 1000 * Math.pow(2, attempt);
+
+            console.log(
+                `Gemini request failed (${status}). Retrying in ${delay / 1000}s...`
+            );
+
+            await sleep(delay);
+        }
+    }
+
+    throw lastError;
+};
+
 const atsResultSchema = z.object({
     matchedSkills: z.array(z.string()),
 
@@ -69,7 +104,7 @@ JOB DESCRIPTION:
 ${jobDescription}
 `;
 
-    const response = await genAI.models.generateContent({
+    const response = await generateWithRetry({
         model: "gemini-3.5-flash-lite",
 
         contents: prompt,
