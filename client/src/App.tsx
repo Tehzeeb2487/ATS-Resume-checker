@@ -1,3 +1,4 @@
+import { Toaster } from 'sonner'
 import { AnalysisProgress } from './components/analysis/AnalysisProgress'
 import { AnalyzerForm } from './components/analyzer/AnalyzerForm'
 import { HeroSection } from './components/analyzer/HeroSection'
@@ -26,6 +27,13 @@ function App() {
 
   return (
     <div className="app">
+      <Toaster
+        position="top-right"
+        richColors
+        closeButton
+        duration={4000}
+      />
+
       <Header />
 
       <main className="main">

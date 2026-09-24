@@ -5,12 +5,10 @@ import type {
   RawBackendResponse,
 } from '../../types/analysis'
 
+import { ANALYSIS_STAGE_DEFINITIONS } from '../../constants/analysisStages'
 import { getScoreInterpretation } from '../../utils/getScoreInterpretation'
-import { getDemoAnalysisResult } from '../mock/demoAnalysisResult'
-import { runMockAnalysisProgress } from '../mock/mockAnalysisProgress'
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
-const USE_MOCK = import.meta.env.VITE_USE_MOCK_API === 'true'
 
 function normalizeBackendResponse(
   raw: RawBackendResponse
@@ -251,31 +249,52 @@ export async function analyzeResume(
   }
 
   /*
-   * Mock mode
+   * Rotate through neutral UI status messages while the real backend request
+   * is in flight.
+   *
+   * We do NOT claim to know backend progress percentages or completion ratios.
+   * Stages transition naturally through status messages and stop at
+   * "Finalizing your results..." with the active loader continuously moving
+   * until the real API response resolves.
    */
-  if (
-    USE_MOCK ||
-    (!API_BASE && !import.meta.env.PROD)
-  ) {
+  let progressIntervalId: ReturnType<typeof setInterval> | undefined
 
-    if (onProgress) {
-      await runMockAnalysisProgress(
-        onProgress,
-        signal
-      )
+  if (onProgress) {
+    let stageIndex = 0
+    const totalStages = ANALYSIS_STAGE_DEFINITIONS.length
+
+    const emitCurrentStage = () => {
+      onProgress!({
+        percent: 0,
+        stages: ANALYSIS_STAGE_DEFINITIONS.map((s, i) => ({
+          ...s,
+          status:
+            i < stageIndex
+              ? 'complete'
+              : i === stageIndex
+              ? 'active'
+              : 'pending',
+        })),
+        currentMessage: ANALYSIS_STAGE_DEFINITIONS[stageIndex].label,
+      })
     }
 
-    return getDemoAnalysisResult()
-  }
+    // Emit initial status message immediately
+    emitCurrentStage()
 
-  /*
-   * Simulate progress while backend is processing.
-   */
-  if (onProgress) {
-    runMockAnalysisProgress(
-      onProgress,
-      signal
-    ).catch(() => { })
+    // Transition smoothly through the status messages, remaining on the final stage
+    progressIntervalId = setInterval(() => {
+      if (stageIndex < totalStages - 1) {
+        stageIndex++
+        emitCurrentStage()
+      } else {
+        // Reached final stage ("Finalizing your results..."), keep active until backend responds
+        if (progressIntervalId !== undefined) {
+          clearInterval(progressIntervalId)
+          progressIntervalId = undefined
+        }
+      }
+    }, 2400)
   }
 
   try {
@@ -364,5 +383,15 @@ export async function analyzeResume(
         : 'Unable to connect to backend server. Please try again.'
 
     throw new Error(message)
+
+  } finally {
+
+    /*
+     * Always clear the indeterminate progress interval
+     * regardless of success or failure.
+     */
+    if (progressIntervalId !== undefined) {
+      clearInterval(progressIntervalId)
+    }
   }
 }

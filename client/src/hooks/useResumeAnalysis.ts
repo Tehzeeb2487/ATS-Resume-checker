@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from 'react'
+import { toast } from 'sonner'
 import { createInitialStages } from '../constants/analysisStages'
 import { analyzeResume } from '../services/api/analyzeResume'
 import type { AnalysisProgress, AnalysisResult, AppView } from '../types/analysis'
@@ -26,7 +27,7 @@ function createInitialProgress(): AnalysisProgress {
   return {
     percent: 0,
     stages: createInitialStages(),
-    currentMessage: 'Preparing analysis',
+    currentMessage: 'Analyzing your resume...',
   }
 }
 
@@ -62,6 +63,13 @@ export function useResumeAnalysis(): UseResumeAnalysisReturn {
     const error = validateAnalysisInputs(resume, jobDescription)
     if (error) {
       setValidationError(error)
+
+      // Show concise Sonner toast for validation errors
+      if (error.field === 'resume') {
+        toast.error('Please upload your resume PDF.')
+      } else {
+        toast.error('Please enter a valid job description with at least 50 characters.')
+      }
       return
     }
 
@@ -85,14 +93,16 @@ export function useResumeAnalysis(): UseResumeAnalysisReturn {
       )
       setResult(analysisResult)
       setView('results')
+      toast.success('Resume analyzed successfully.')
     } catch (err) {
       if (err instanceof DOMException && err.name === 'AbortError') {
         return
       }
       const message =
-        err instanceof Error ? err.message : 'Something went wrong during analysis.'
+        err instanceof Error ? err.message : 'Analysis failed. Please try again.'
       setAnalysisError(message)
       setView('analyzer')
+      toast.error(message)
     }
   }, [resume, jobDescription])
 

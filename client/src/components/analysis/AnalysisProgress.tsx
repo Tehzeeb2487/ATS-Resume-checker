@@ -1,12 +1,17 @@
 import type { AnalysisProgress as AnalysisProgressType } from '../../types/analysis'
-import { CircularProgress } from '../ui/CircularProgress'
-import { CheckIcon } from '../ui/Icons'
+import { CheckIcon, SparklesIcon } from '../ui/Icons'
 
 interface AnalysisProgressProps {
   progress: AnalysisProgressType
 }
 
 export function AnalysisProgress({ progress }: AnalysisProgressProps) {
+  const activeStage = progress.stages.find((stage) => stage.status === 'active')
+  const statusMessage =
+    progress.currentMessage ||
+    activeStage?.label ||
+    'Analyzing your resume...'
+
   return (
     <section
       className="analysis-progress"
@@ -15,20 +20,31 @@ export function AnalysisProgress({ progress }: AnalysisProgressProps) {
     >
       <div className="analysis-progress__container">
         <div className="analysis-progress__visual-card">
-          <div className="analysis-progress__ring-wrapper">
-            <CircularProgress
-              value={progress.percent}
-              size={180}
-              strokeWidth={12}
-              label="Analysis completion"
-            />
+          <div className="analysis-progress__moving-loader" aria-hidden="true">
+            <div className="analysis-progress__spinner-ring" />
+            <div className="analysis-progress__pulse-core">
+              <SparklesIcon size={32} />
+            </div>
           </div>
 
           <h2 id="progress-heading" className="analysis-progress__title">
-            Analyzing Your Resume...
+            Analyzing your resume
           </h2>
+
+          <div
+            className="analysis-progress__bar"
+            role="progressbar"
+            aria-label="Analysis in progress"
+          >
+            <div className="analysis-progress__bar-fill" />
+          </div>
+
+          <p className="analysis-progress__status">
+            {statusMessage}
+          </p>
+
           <p className="analysis-progress__subtitle">
-            This may take a few moments. Please don&apos;t close this page.
+            This may take a few moments...
           </p>
         </div>
 
@@ -67,4 +83,3 @@ export function AnalysisProgress({ progress }: AnalysisProgressProps) {
     </section>
   )
 }
-

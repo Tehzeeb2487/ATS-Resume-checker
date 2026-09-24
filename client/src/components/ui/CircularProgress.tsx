@@ -6,6 +6,7 @@ interface CircularProgressProps {
   size?: number
   strokeWidth?: number
   label?: string
+  isWaiting?: boolean
 }
 
 export function CircularProgress({
@@ -14,6 +15,7 @@ export function CircularProgress({
   size = 160,
   strokeWidth = 10,
   label = 'Match score',
+  isWaiting = false,
 }: CircularProgressProps) {
   const gradientId = useId()
   const radius = (size - strokeWidth) / 2
@@ -24,7 +26,7 @@ export function CircularProgress({
 
   return (
     <div
-      className="circular-progress"
+      className={`circular-progress ${isWaiting ? 'circular-progress--waiting' : ''}`}
       role="img"
       aria-label={`${label}: ${normalized} out of ${max}`}
       style={{ width: size, height: size }}
@@ -46,7 +48,9 @@ export function CircularProgress({
           fill="none"
         />
         <circle
-          className="circular-progress__fill"
+          className={`circular-progress__fill ${
+            isWaiting ? 'circular-progress__fill--waiting' : ''
+          }`}
           cx={center}
           cy={center}
           r={radius}

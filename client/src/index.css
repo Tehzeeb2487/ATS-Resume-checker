@@ -1006,20 +1006,122 @@ button {
   box-shadow: var(--shadow-card);
 }
 
-.analysis-progress__ring-wrapper {
+.analysis-progress__moving-loader {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 1.5rem;
+}
+
+.analysis-progress__spinner-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3px solid rgba(99, 102, 241, 0.15);
+  border-top-color: var(--color-primary);
+  border-right-color: var(--color-secondary);
+  animation: rotate-loader 1.6s cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite;
+  filter: drop-shadow(0 0 12px rgba(99, 102, 241, 0.45));
+}
+
+@keyframes rotate-loader {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.analysis-progress__pulse-core {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(139, 92, 246, 0.1) 60%, transparent 100%);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a78bfa;
+  animation: pulse-core 2.4s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.25);
+}
+
+@keyframes pulse-core {
+  0%, 100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 16px rgba(99, 102, 241, 0.2);
+    color: #a78bfa;
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 28px rgba(139, 92, 246, 0.55);
+    color: #c084fc;
+  }
 }
 
 .analysis-progress__title {
   font-size: 1.35rem;
   font-weight: 700;
   color: #ffffff;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.analysis-progress__bar {
+  width: 100%;
+  max-width: 280px;
+  height: 6px;
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border);
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+  margin: 1.25rem 0 1rem;
+}
+
+.analysis-progress__bar-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6, #c084fc);
+  animation: indeterminate-progress-bar 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes indeterminate-progress-bar {
+  0% {
+    left: -40%;
+    width: 40%;
+  }
+  50% {
+    left: 25%;
+    width: 55%;
+  }
+  100% {
+    left: 100%;
+    width: 40%;
+  }
+}
+
+.analysis-progress__status {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #c084fc;
+  margin: 0 0 0.35rem;
+  min-height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .analysis-progress__subtitle {
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   color: var(--color-text-muted);
+  margin: 0;
 }
 
 .analysis-progress__stages-card {
@@ -1235,6 +1337,10 @@ button {
   justify-content: center;
 }
 
+.circular-progress--waiting {
+  animation: circular-glow-pulse 2.4s ease-in-out infinite;
+}
+
 .circular-progress__track {
   stroke: #1e293b;
 }
@@ -1242,6 +1348,10 @@ button {
 .circular-progress__fill {
   stroke-linecap: round;
   transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.circular-progress__fill--waiting {
+  animation: circular-fill-shimmer 2.4s ease-in-out infinite;
 }
 
 .circular-progress__content {
@@ -1260,11 +1370,42 @@ button {
   line-height: 1;
 }
 
+.circular-progress--waiting .circular-progress__value {
+  animation: circular-value-pulse 2.4s ease-in-out infinite;
+}
+
 .circular-progress__max {
   font-size: 0.875rem;
   color: var(--color-text-subtle);
   margin-left: 2px;
   margin-top: 8px;
+}
+
+@keyframes circular-glow-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 6px rgba(99, 102, 241, 0.35));
+  }
+  50% {
+    filter: drop-shadow(0 0 18px rgba(139, 92, 246, 0.7));
+  }
+}
+
+@keyframes circular-fill-shimmer {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.82;
+  }
+}
+
+@keyframes circular-value-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.88;
+  }
 }
 
 /* METRIC CARDS */
