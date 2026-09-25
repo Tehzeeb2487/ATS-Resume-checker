@@ -1815,3 +1815,10 @@ button {
     flex: 1;
   }
 }
+
+@media (max-width: 430px) {
+  .results-dashboard__top-actions {
+    display: flex;
+    flex-direction: column;
+  }
+}

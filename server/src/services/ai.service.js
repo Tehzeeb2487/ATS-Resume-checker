@@ -64,6 +64,15 @@ const atsResultSchema = z.object({
     ),
 });
 
+const testGemini = async () => {
+    const response = await generateWithRetry({
+        model: "gemini-3.5-flash-lite",
+        contents: "Reply with exactly: Gemini API is working",
+    });
+
+    return response.text;
+};
+
 const analyzeResumeWithAI = async (resumeText, jobDescription) => {
     const prompt = `
 You are an ATS resume analysis assistant.
@@ -210,4 +219,5 @@ ${jobDescription}
 
 module.exports = {
     analyzeResumeWithAI,
+    testGemini,
 };

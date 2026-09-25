@@ -115,7 +115,7 @@ export function ResumeUploader({ file, onFileChange, error }: ResumeUploaderProp
               Browse File
             </button>
             <p id={`${inputId}-hint`} className="upload-zone__hint">
-              Supported: PDF, DOCX (Max 5MB)
+              Supported: PDF files only (Max 5MB)
             </p>
           </div>
         )}

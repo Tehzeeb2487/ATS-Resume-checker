@@ -42,7 +42,7 @@ export function validateResumeFile(file: File | null): ValidationError | null {
   if (!typeAccepted && !extensionAccepted) {
     return {
       code: 'UNSUPPORTED_TYPE',
-      message: 'Unsupported file type. Please upload a PDF or DOCX file.',
+      message: 'Unsupported file type. Please upload a PDF file.',
       field: 'resume',
     }
   }

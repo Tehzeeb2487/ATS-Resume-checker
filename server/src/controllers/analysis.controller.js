@@ -1,7 +1,7 @@
 const fs = require("fs/promises");
 const {
     extractTextFromPDF,
-} = require("../services/pdf.serveice");
+} = require("../services/pdf.service");
 
 const {
     analyzeResumeWithAI
