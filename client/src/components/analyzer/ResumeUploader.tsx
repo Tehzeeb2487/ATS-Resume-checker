@@ -1,4 +1,5 @@
 import { useCallback, useId, useRef, useState, type ChangeEvent, type DragEvent } from 'react'
+import { toast } from 'sonner'
 import { ACCEPTED_RESUME_EXTENSIONS } from '../../constants/validation'
 import { formatFileSize } from '../../utils/formatFileSize'
 import { validateResumeFile } from '../../utils/validateInputs'
@@ -25,6 +26,7 @@ export function ResumeUploader({ file, onFileChange, error }: ResumeUploaderProp
       const validationError = validateResumeFile(selected)
       if (validationError) {
         setLocalError(validationError.message)
+        toast.error(validationError.message)
         onFileChange(null)
         return
       }

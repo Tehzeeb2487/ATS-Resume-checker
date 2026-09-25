@@ -1086,23 +1086,37 @@ button {
   position: absolute;
   top: 0;
   bottom: 0;
+  left: 0;
+  width: 0%;
   border-radius: 9999px;
   background: linear-gradient(90deg, #6366f1, #8b5cf6, #c084fc);
-  animation: indeterminate-progress-bar 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: progress-fill-forward 14s cubic-bezier(0.1, 0.5, 0.15, 1) forwards;
 }
 
-@keyframes indeterminate-progress-bar {
+.analysis-progress__bar-fill--complete {
+  animation: none !important;
+  width: 100% !important;
+  transition: width 0.2s ease-out;
+}
+
+@keyframes progress-fill-forward {
   0% {
-    left: -40%;
-    width: 40%;
+    width: 0%;
   }
-  50% {
-    left: 25%;
-    width: 55%;
+  15% {
+    width: 28%;
+  }
+  35% {
+    width: 54%;
+  }
+  60% {
+    width: 74%;
+  }
+  85% {
+    width: 86%;
   }
   100% {
-    left: 100%;
-    width: 40%;
+    width: 92%;
   }
 }
 

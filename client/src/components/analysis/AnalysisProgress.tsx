@@ -12,6 +12,8 @@ export function AnalysisProgress({ progress }: AnalysisProgressProps) {
     activeStage?.label ||
     'Analyzing your resume...'
 
+  const isComplete = progress.percent >= 100
+
   return (
     <section
       className="analysis-progress"
@@ -36,7 +38,11 @@ export function AnalysisProgress({ progress }: AnalysisProgressProps) {
             role="progressbar"
             aria-label="Analysis in progress"
           >
-            <div className="analysis-progress__bar-fill" />
+            <div
+              className={`analysis-progress__bar-fill ${
+                isComplete ? 'analysis-progress__bar-fill--complete' : ''
+              }`}
+            />
           </div>
 
           <p className="analysis-progress__status">

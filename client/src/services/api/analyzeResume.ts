@@ -364,6 +364,17 @@ export async function analyzeResume(
     const rawData =
       responseJson.data as RawBackendResponse
 
+    if (onProgress) {
+      onProgress({
+        percent: 100,
+        stages: ANALYSIS_STAGE_DEFINITIONS.map((s) => ({
+          ...s,
+          status: 'complete',
+        })),
+        currentMessage: 'Analysis complete!',
+      })
+    }
+
     return normalizeBackendResponse(
       rawData
     )
