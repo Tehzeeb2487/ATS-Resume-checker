@@ -16,6 +16,15 @@ A full-stack ATS Resume Checker that analyzes a resume against a job description
 
 ![ATS Resume Checker Results](./screenshots/results.png)
 
+### Only PDF files validation
+
+![Only PDF File Validation](./screenshots/analysis-error.png)
+
+### Analysis/API Error
+
+![Analysis/API Error](./screenshots/validation-error.png)
+
+
 ---
 
 ## Overview
