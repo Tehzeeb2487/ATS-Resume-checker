@@ -1,6 +1,8 @@
 # ATS Resume Checker
 
-![Repository Views](https://komarev.com/ghpvc/?username=Tehzeeb2487&label=Repository%20Views&style=flat)
+> AI-powered resume analysis and job description matching.
+
+**[🚀 Live Demo](https://ats-resume-checker-by-tj.netlify.app/)**
 
 A full-stack ATS Resume Checker that analyzes a resume against a job description and provides an ATS compatibility score, matched skills, missing keywords, job-match metrics, and actionable improvement suggestions using Google Gemini AI.
 
